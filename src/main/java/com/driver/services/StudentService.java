@@ -2,10 +2,12 @@ package com.driver.services;
 
 import com.driver.models.Student;
 import com.driver.repositories.StudentRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class StudentService {
 
 
