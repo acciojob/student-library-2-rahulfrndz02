@@ -1,7 +1,5 @@
 package com.driver.services;
 
-import com.driver.Convertors.AuthorConvertor;
-import com.driver.RequestDto.AuthorRequestDto;
 import com.driver.models.Author;
 import com.driver.repositories.AuthorRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,9 +13,8 @@ public class AuthorService {
     @Autowired
     AuthorRepository authorRepository1;
 
-    public String create(AuthorRequestDto authorRequestDto){
-        try {
-            Author author = AuthorConvertor.convertAuthorDtoToEntity(authorRequestDto);
+    public String create(Author author){
+        try{
             authorRepository1.save(author);
         }
         catch (Exception e){

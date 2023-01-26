@@ -8,11 +8,6 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Data
-@Getter
-@Setter
-@Builder
-@AllArgsConstructor
 @Table(name = "book")
 public class Book {
 
@@ -44,6 +39,76 @@ public class Book {
     private List<Transaction> transactions;
 
     public Book() {
+    }
+
+    public Book(String name, Genre genre, Author author) {
+        this.name = name;
+        this.genre = genre;
+        this.author = author;
+    }
+
+    //by me
+    public Book(int id, Genre genre, Author author, boolean available) {
+        this.id = id;
+        this.genre = genre;
+        this.author = author;
+        this.available = available;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Genre getGenre() {
+        return genre;
+    }
+
+    public void setGenre(Genre genre) {
+        this.genre = genre;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 }
 
