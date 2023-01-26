@@ -35,84 +35,39 @@ public class TransactionService {
     public int fine_per_day;
 
     public String issueBook(int cardId, int bookId) throws Exception {
-//        //check whether bookId and cardId already exist
-//        Card card = cardRepository5.findById(cardId).get();
-//        Book book = bookRepository5.findById(bookId).get();
-//
-//        Transaction transaction = new Transaction();
-//        transaction.setCard(card);
-//        transaction.setBook(book);
-//        transaction.setIssueOperation(true);
-//
-//        //conditions required for successful transaction of issue book:
-//        //1. book is present and available
-//        // If it fails: throw new Exception("Book is either unavailable or not present");
-//        if(book == null && !book.isAvailable()){
-//            transaction.setTransactionStatus(TransactionStatus.FAILED);
-//            transactionRepository5.save(transaction);
-//            throw new Exception("Book is either unavailable or not present");
-//        }
-//
-//        //2. card is present and activated
-//        // If it fails: throw new Exception("Card is invalid");
-//        if(card == null && card.getCardStatus().equals(CardStatus.DEACTIVATED)){
-//            transaction.setTransactionStatus(TransactionStatus.FAILED);
-//            transactionRepository5.save(transaction);
-//            throw new Exception("Card is invalid");
-//        }
-//        //3. number of books issued against the card is strictly less than max_allowed_books
-//        // If it fails: throw new Exception("Book limit has reached for this card");
-//        if(card.getBooks().size() >= max_allowed_books){
-//            transaction.setTransactionStatus(TransactionStatus.FAILED);
-//            transactionRepository5.save(transaction);
-//            throw new Exception("Book limit has reached for this card");
-//        }
-//        //If the transaction is successful, save the transaction to the list of transactions and return the id
-//        book.setCard(card);
-//        book.setAvailable(false);
-//        List<Book> bookList = card.getBooks();
-//        bookList.add(book);
-//        card.setBooks(bookList);
-//
-//        cardRepository5.save(card);
-//        bookRepository5.updateBook(book);
-//        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-//
-//        transactionRepository5.save(transaction);
-//        //Note that the error message should match exactly in all cases
-//
-//       return transaction.getTransactionId(); //return transactionId instead
-
-
-        Book book = bookRepository5.findById(bookId).get();
+        //check whether bookId and cardId already exist
         Card card = cardRepository5.findById(cardId).get();
+        Book book = bookRepository5.findById(bookId).get();
 
         Transaction transaction = new Transaction();
-
-        transaction.setBook(book);
         transaction.setCard(card);
+        transaction.setBook(book);
         transaction.setIssueOperation(true);
 
-        //Book should be available
+        //conditions required for successful transaction of issue book:
+        //1. book is present and available
+        // If it fails: throw new Exception("Book is either unavailable or not present");
         if(book == null || !book.isAvailable()){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Book is either unavailable or not present");
         }
 
-        //Card is unavaible or its deactivated
+        //2. card is present and activated
+        // If it fails: throw new Exception("Card is invalid");
         if(card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Card is invalid");
         }
-
+        //3. number of books issued against the card is strictly less than max_allowed_books
+        // If it fails: throw new Exception("Book limit has reached for this card");
         if(card.getBooks().size() >= max_allowed_books){
             transaction.setTransactionStatus(TransactionStatus.FAILED);
             transactionRepository5.save(transaction);
             throw new Exception("Book limit has reached for this card");
         }
-
+        //If the transaction is successful, save the transaction to the list of transactions and return the id
         book.setCard(card);
         book.setAvailable(false);
         List<Book> bookList = card.getBooks();
@@ -120,18 +75,63 @@ public class TransactionService {
         card.setBooks(bookList);
 
         cardRepository5.save(card);
-
         bookRepository5.updateBook(book);
-
         transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
 
         transactionRepository5.save(transaction);
-        //This saving of transcation can't be avoided bcz card is not bidirectionally connected to txn
-        //and for the book we are not calling the inbuilt .save function
+        //Note that the error message should match exactly in all cases
 
+       return transaction.getTransactionId(); //return transactionId instead
 
-
-        return transaction.getTransactionId();
+//
+//        Book book = bookRepository5.findById(bookId).get();
+//        Card card = cardRepository5.findById(cardId).get();
+//
+//        Transaction transaction = new Transaction();
+//
+//        transaction.setBook(book);
+//        transaction.setCard(card);
+//        transaction.setIssueOperation(true);
+//
+//        //Book should be available
+//        if(book == null || !book.isAvailable()){
+//            transaction.setTransactionStatus(TransactionStatus.FAILED);
+//            transactionRepository5.save(transaction);
+//            throw new Exception("Book is either unavailable or not present");
+//        }
+//
+//        //Card is unavaible or its deactivated
+//        if(card == null || card.getCardStatus().equals(CardStatus.DEACTIVATED)){
+//            transaction.setTransactionStatus(TransactionStatus.FAILED);
+//            transactionRepository5.save(transaction);
+//            throw new Exception("Card is invalid");
+//        }
+//
+//        if(card.getBooks().size() >= max_allowed_books){
+//            transaction.setTransactionStatus(TransactionStatus.FAILED);
+//            transactionRepository5.save(transaction);
+//            throw new Exception("Book limit has reached for this card");
+//        }
+//
+//        book.setCard(card);
+//        book.setAvailable(false);
+//        List<Book> bookList = card.getBooks();
+//        bookList.add(book);
+//        card.setBooks(bookList);
+//
+//        cardRepository5.save(card);
+//
+//        bookRepository5.updateBook(book);
+//
+//        transaction.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+//
+//        transactionRepository5.save(transaction);
+//        //This saving of transcation can't be avoided bcz card is not bidirectionally connected to txn
+//        //and for the book we are not calling the inbuilt .save function
+//
+//
+//
+//        return transaction.getTransactionId();
     }
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
