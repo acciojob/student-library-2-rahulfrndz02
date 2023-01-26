@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Slf4j
 public class TransactionService {
 
     @Autowired
@@ -43,6 +42,7 @@ public class TransactionService {
         Transaction transaction = new Transaction();
         transaction.setCard(card);
         transaction.setBook(book);
+        transaction.setIssueOperation(true);
 
         //conditions required for successful transaction of issue book:
         //1. book is present and available
@@ -86,16 +86,21 @@ public class TransactionService {
 
     public Transaction returnBook(int cardId, int bookId) throws Exception{
 
-        List<Transaction> transactions = transactionRepository5.find(cardId, bookId, TransactionStatus.SUCCESSFUL, true);
-        Transaction transaction = transactions.get(transactions.size() - 1);
-        Date issueDate = transaction.getTransactionDate();
-        long timeIssuetime = Math.abs(System.currentTimeMillis() - issueDate.getTime());
-        long noOfDaysPassed = TimeUnit.DAYS.convert(timeIssuetime, TimeUnit.MICROSECONDS);
+        List<Transaction> transactions = transactionRepository5.find(cardId, bookId,TransactionStatus.SUCCESSFUL, true);
 
-        int fine =0;
-        if(noOfDaysPassed > getMax_allowed_days){
-            fine = (int)((noOfDaysPassed - getMax_allowed_days)* fine_per_day);
+        Transaction transaction = transactions.get(transactions.size() - 1);
+
+        Date issueDate = transaction.getTransactionDate();
+
+        long timeIssuetime = Math.abs(System.currentTimeMillis() - issueDate.getTime());
+
+        long no_of_days_passed = TimeUnit.DAYS.convert(timeIssuetime, TimeUnit.MILLISECONDS);
+
+        int fine = 0;
+        if(no_of_days_passed > getMax_allowed_days){
+            fine = (int)((no_of_days_passed - getMax_allowed_days) * fine_per_day);
         }
+
         Book book = transaction.getBook();
 
         book.setAvailable(true);
@@ -103,14 +108,16 @@ public class TransactionService {
 
         bookRepository5.updateBook(book);
 
-        Transaction transaction1 = new Transaction();
-        transaction1.setBook(transaction.getBook());
-        transaction1.setCard(transaction.getCard());
-        transaction1.setIssueOperation(false);
-        transaction1.setFineAmount(fine);
-        transaction1.setTransactionStatus(TransactionStatus.SUCCESSFUL);
-        transactionRepository5.save(transaction1);
-        return transaction1;
+        Transaction tr = new Transaction();
+        tr.setBook(transaction.getBook());
+        tr.setCard(transaction.getCard());
+        tr.setIssueOperation(false);
+        tr.setFineAmount(fine);
+        tr.setTransactionStatus(TransactionStatus.SUCCESSFUL);
+
+        transactionRepository5.save(tr);
+
+        return tr;
         //for the given transaction calculate the fine amount considering the book has been returned exactly when this function is called
         //make the book available for other users
         //make a new transaction for return book which contains the fine amount as well

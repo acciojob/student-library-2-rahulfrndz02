@@ -45,14 +45,7 @@ public class Book {
         this.name = name;
         this.genre = genre;
         this.author = author;
-    }
-
-    //by me
-    public Book(int id, Genre genre, Author author, boolean available) {
-        this.id = id;
-        this.genre = genre;
-        this.author = author;
-        this.available = available;
+        this.available = true;
     }
 
     public int getId() {

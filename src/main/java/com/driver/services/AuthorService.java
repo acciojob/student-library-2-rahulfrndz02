@@ -7,20 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-@Slf4j
 public class AuthorService {
 
     @Autowired
     AuthorRepository authorRepository1;
 
-    public String create(Author author){
-        try{
+    public void create(Author author){
+        //try{
             authorRepository1.save(author);
-        }
-        catch (Exception e){
-            log.info("createAuthor has caused an error");
-            return "Create author didn't work";
-        }
-        return "Author created successfully";
+        //}
+//        catch (Exception e){
+//            log.info("createAuthor has caused an error");
+//            return "Create author didn't work";
+//        }
+//        return "Author created successfully";
     }
 }
